@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+
+
+  <title>{% block title %}교수학습지원센터{% endblock %}</title>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!--    #css -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<!--#javascript-->
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+
+
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <header class="header clearfix">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div>
+            <a class="navbar-brand" href="/">교수학습지원센터</a>
+            </div>
+            <div class="col-7">
+            <ul class="nav">
+                <li class="nav-item"><a href="/" class="active nav-link ">Home</a></li>
+                {% if user.is_authenticated %}
+                <li class="nav-item"><a href="#" class="nav-link">Welcome, {{user.get_username}}</a></li>
+                <li class="nav-item"><a href="{% url 'board:board_upload' %}" class="nav-link">Upload</a></li>
+                <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link">Logout</a></li>
+                {% else %}
+                <li class="nav-item"><a href="{% url 'login' %}" class="nav-link">Login</a></li>
+                <li class="nav-item"><a href="{% url 'register' %}" class="nav-link">Signup</a></li>
+                {% endif %}
+            </ul>
+            </div>
+            <div>
+                <form class="form-inline my-2 my-md-0">
+                    <div><input class="form-control float-right" type="text" placeholder="Search" aria-label="Search"></div>
+                </form>
+            </div>
+        </nav>
+    </header>
+    {% block content %}
+
+
+</div>
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <td><B>번호</B></td>
+            <td><B>OS</B></td>
+            <td><B>제목</B></td>
+            <td><B>날짜</B></td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for post in posts %}
+        <tr>
+            <td>{{post.id}}</td>
+            <td>{{post.OS}}</td>
+            <td><a href="/post/{{ post.id }}/">{{ post.title }}</a></td>
+            <td>{{post.created}}</td>
+            <td><a href="{% url 'board:board_update' pk=post.id %}" class="btn btn-outline-success btn-sm float-right">Update</a></td>
+            <td><a href="{% url 'board:board_delete' pk=post.id %}" class="btn btn-outline-danger btn-sm float-right">Delete</a></td>
+
+        </tr>
+
+        {% endfor %}
+
+
+
+        <tbody>
+    </table>
+
+    {% if posts.has_previous %}
+    <a href="?page=1">맨앞으로</a>
+    <a href="?page={{posts.previous_page_number}}">이전으로</a>
+    {% endif %}
+    <span>{{posts.number}}</span>
+    <span>/</span>
+    <span>{{posts.paginator.num_pages}}</span>
+    {% if posts.has_next %}
+    <a href="?page={{posts.next_page_number}}">다음으로</a>
+    <a href="?page={{posts.paginator.num_pages}}">맨뒤로</a>
+    {% endif %}
+
+
+{% endblock %}
+
+    <footer class="footer">
+        <p>&copy; 최강교학지</p>
+    </footer>
+</div>
+</body>
+</html>
